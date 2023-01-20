@@ -1,0 +1,22 @@
+{
+  "name": "multivision-test",
+  "version": "1.0.0",
+  "description": "Advanced exercise for javascript",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filipecheverrya/multivision-test.git"
+  },
+  "author": "Filipe Echeverrya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/filipecheverrya/multivision-test/issues"
+  },
+  "homepage": "https://github.com/filipecheverrya/multivision-test#readme",
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
