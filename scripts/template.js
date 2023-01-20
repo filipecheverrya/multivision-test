@@ -1,48 +1,4 @@
-const userURL = "https://jsonplaceholder.typicode.com/users";
-const postsURL = "https://jsonplaceholder.typicode.com/posts";
-
-class Letter {
-    async fetchAPI(url) {
-        const request = await (await fetch(url)).json();
-        return request;
-    }
-
-    mergeData(user, posts) {
-        const response = user;
-        const { address, company } = user;
-        const { street, suite, city, zipcode } = address;
-
-        response.address = `${street}, ${suite} - ${zipcode} ${city}`;
-        response.company = company.name;
-        response.posts = posts;
-
-        return response;
-    }
-
-    filterPosts(posts, userId) {
-        return posts.filter(post => {
-            if (post.userId === userId) {
-                delete post.userId;
-                return post;
-            }
-        });
-    }
-
-    async get() {
-        try {
-            const posts = await this.fetchAPI(postsURL);
-            const users = await this.fetchAPI(userURL);
-
-            return users.map((user) => {
-                const userPosts = this.filterPosts(posts, user.id);
-                return this.mergeData(user, userPosts);
-            });
-        } catch ({ message, cause }) {
-            return { message, cause };
-        }
-    }
-}
-
+const Letter = require("./main");
 const letter = new Letter();
 const root = document.getElementById("root");
 
@@ -79,7 +35,7 @@ function itemTemplate(users) {
                     <li>
                         <header>
                             <h2>Personal Informations</h2>
-                            <button type="button" onClick="changeInformationVisibility(event)">Show informations</button>
+                            <button type="button" class="btn-information">Show informations</button>
                         </header>
                         <ul class="information-list hidden">
                             ${Object.entries(user).map(([key, val])=> {
@@ -99,7 +55,7 @@ function itemTemplate(users) {
                     <li>
                         <header>
                             <h2>Posts</h2>
-                            <button type="button" onClick="changePostsVisibility(event)">Show posts</button>
+                            <button type="button" class="btn-posts">Show posts</button>
                         </header>
                         <ul class="post-list hidden">
                             ${user.posts.map(post => `
@@ -116,6 +72,12 @@ function itemTemplate(users) {
     }).join("");
 }
 
+function addMultipleEventListeners(target, event, callback) {
+    root.querySelectorAll(target).forEach(item => {
+        item.addEventListener(event, callback, false);
+    });
+}
+
 async function init() {
     const response = await letter.get();
     root.innerHTML = `
@@ -123,6 +85,8 @@ async function init() {
             <ul>${itemTemplate(response)}</ul>
         </div>
     `;
+    addMultipleEventListeners(".btn-information", "click", changeInformationVisibility);
+    addMultipleEventListeners(".btn-posts", "click", changePostsVisibility);
 }
 
 init();

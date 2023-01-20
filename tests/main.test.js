@@ -1,4 +1,4 @@
-const Letter = require('../main');
+const Letter = require('../scripts/main');
 
 const MOCK = {
     USERS: [
